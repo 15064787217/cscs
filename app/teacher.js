@@ -83,10 +83,10 @@ const teacher = {
 		return $(await request.post(url)).find("tr").toArray()
 			.filter(
 				tr => Array.from(tr.children).some(
-					td => td.innerText.trim() === "未完成"
-				)
+					td => td.innerText.trim() === "未完成",
+				),
 			).map(
-				tr => tr.children[1].innerText.trim()
+				tr => tr.children[1].innerText.trim(),
 			);
 	},
 	getSpecials: function () {
@@ -102,7 +102,7 @@ const teacher = {
 			await Promise.all(links.map(async link => {
 				let title = (link.title || link.innerText).trim().replace(/^第(\d+).+?$/, "$1");
 				let url = link.getAttribute("href");
-				if (url === "#") {
+				if (url === "#" || /^javascript:/i.test(url)) {
 					return;
 				}
 				if (reActivity.test(url)) {
@@ -111,7 +111,7 @@ const teacher = {
 					url = url.replace(reActivity, "/ActivityNoticeReplayToStudent/0/$1");
 				}
 
-				return teacher.getSpecial(url, title).then(names => {
+				return teacher.getSpecial(url).then(names => {
 					if (names.length) {
 						works[title] = names;
 					}
@@ -154,9 +154,9 @@ const teacher = {
 				const urls = await teacher.getHomeWorkUrls();
 				let work = urls.specials[id];
 				if (!work) {
-					const title = id.replace(/专题$/, "");
+					const title = id.replace(/^\d*(.*?)专题$/, "$1");
 					work = Object.keys(urls.specials).map(
-						id => urls.specials[id]
+						id => urls.specials[id],
 					).find(work => !work.expired && work.title.includes(title)) || getVacationWork(title);
 				}
 				if (work) {
