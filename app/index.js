@@ -94,7 +94,7 @@ function initialize () {
 		}
 
 		if (!city) {
-			city = "chengdu";
+			city = "jining";
 		}
 
 		if (dev) {
